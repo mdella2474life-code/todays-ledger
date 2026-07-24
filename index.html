@@ -56,7 +56,20 @@
   };
 </script>
 
-<script type="text/babel" data-type="module" src="app.js"></script>
+<script>
+  fetch('app.js')
+    .then((res) => res.text())
+    .then((code) => {
+      const transformed = Babel.transform(code, { presets: ['react'] }).code;
+      const script = document.createElement('script');
+      script.text = transformed;
+      document.body.appendChild(script);
+    })
+    .catch((err) => {
+      document.getElementById('root').innerHTML =
+        '<p style="color:#F6F2E9;font-family:system-ui;padding:20px;">Failed to load app.js: ' + err.message + '</p>';
+    });
+</script>
 
 <script>
   if ('serviceWorker' in navigator) {
